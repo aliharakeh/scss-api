@@ -1,0 +1,107 @@
+@use 'utils' as *;
+
+/* This mixin connects the component style to the CSS variables prefixed as `flex-` */
+@mixin flex($properties...) {
+    @include generate-style-css(flex, $properties);
+}
+
+/* This mixin connects the component style to the CSS variables prefixed as `align-` */
+@mixin align($properties...) {
+    @include generate-style-css(align, $properties);
+}
+
+/* This mixin connects the component style to the CSS variables prefixed as `justify-` */
+@mixin justify($properties...) {
+    @include generate-style-css(justify, $properties);
+}
+
+/* This mixin connects the component style to the CSS variables prefixed as `grid-` */
+@mixin grid($properties...) {
+    @include generate-style-css(grid, $properties);
+}
+
+/* This mixin connects the component style to the CSS variables prefixed as `font-` */
+@mixin font($properties...) {
+    @include generate-style-css(font, $properties);
+}
+
+/* This mixin connects the component style to the CSS variables prefixed as `text-` */
+@mixin text($properties...) {
+    @include generate-style-css(text, $properties);
+}
+
+/* This mixin connects the component style to the CSS variables prefixed as `background-` */
+@mixin background($properties...) {
+    @include generate-style-css(background, $properties);
+}
+
+/* This mixin connects the component style to the CSS variables prefixed as `border-` */
+@mixin border($properties...) {
+    @include generate-style-css(border, $properties);
+}
+
+/* This mixin connects the component style to the CSS variables prefixed as `box-` */
+@mixin box($properties...) {
+    @include generate-style-css(box, $properties);
+}
+
+/* This mixin connects the component style to the CSS variables related to padding */
+@mixin padding($properties...) {
+    @include generate-style-css(padding, $properties);
+}
+
+/* This mixin connects the component style to the CSS variables related to margin */
+@mixin margin($properties...) {
+    @include generate-style-css(margin, $properties);
+}
+
+/* This mixin connects the component style to the CSS variables that are not supported by the other mixins */
+@mixin style($properties...) {
+    @include generate-style-css(null, $properties);
+}
+
+/* This mixin connects the component style to the CSS variables related to the `header-` */
+@mixin header($properties...) {
+    @include generate-style-css(header, $properties, true);
+}
+
+/* This mixin connects the component style to the CSS variables related to the `content-` */
+@mixin content($properties...) {
+    @include generate-style-css(content, $properties, true);
+}
+
+/* This mixin connects the component style to the CSS variables related to the `footer-` */
+@mixin footer($properties...) {
+    @include generate-style-css(footer, $properties, true);
+}
+
+/* This mixin connects the component style to the CSS variables related to the hover state */
+@mixin hover($properties...) {
+    @include generate-style-css(hover, $properties, true);
+}
+
+/* This mixin connects the component style to the CSS variables related to the active state */
+@mixin active($properties...) {
+    @include generate-style-css(active, $properties, true);
+}
+
+/* This mixin connects the component style to the CSS variables related to the disabled state */
+@mixin disabled($properties...) {
+    @include generate-style-css(disabled, $properties, true);
+}
+
+/* This mixin connects the component style to the CSS variables related to the focus state */
+@mixin focus($properties...) {
+    @include generate-style-css(focus, $properties, true);
+}
+
+/* This mixin connects the component style to the CSS variables related to the error state */
+@mixin error($properties...) {
+    @include generate-style-css(error, $properties, true);
+}
+
+@mixin connect-css-to-var($properties...) {
+    @each $property, $var, $default, $important in $properties {
+        #{$property}: #{generate-var($var, $default, $important)};
+    }
+}

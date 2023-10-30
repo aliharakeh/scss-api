@@ -1,0 +1,47 @@
+@use 'scss/vars';
+@use 'scss/styles';
+@use 'scss/theme';
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.card {
+  // define your css variables with css property-like names & default values
+  // through the vars api
+  @include vars.style(color black);
+  @include vars.background(color lightgray);
+  @include vars.border(color brown);
+  @include vars.padding(block 8px, inline 1rem);
+
+  // normal css
+  overflow: hidden;
+  border-style: solid;
+  flex-grow: 1;
+  border-width: 1px;
+  border-radius: 8px;
+
+  // connect css to vars through the styles api
+  @include styles.background(color);
+  @include styles.border(color);
+}
+
+.card-image {
+  width: 100%;
+}
+
+.card-content {
+  // connect css to vars through the styles api
+  @include styles.style(color);
+  @include styles.padding(block, inline);
+}
+
+.card.dark {
+  // update the css vars though the theme api
+  @include theme.style(color white);
+  @include theme.border(color white);
+  @include theme.background(color #333232);
+}

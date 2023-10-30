@@ -1,0 +1,115 @@
+@use 'utils' as *;
+
+/* This mixin sets the initial values of the CSS variables prefixed as `background-` */
+@mixin background($properties...) {
+    @include set-vars($properties, background);
+}
+
+/* This mixin sets the initial values of the CSS variables prefixed as `font-` */
+@mixin font($properties...) {
+    @include set-vars($properties, font);
+}
+
+/* This mixin sets the initial values of the CSS variables prefixed as `text-` */
+@mixin text($properties...) {
+    @include set-vars($properties, text);
+}
+
+/* This mixin sets the initial values of the CSS variables prefixed as `border-` */
+@mixin border($properties...) {
+    @include set-vars($properties, border);
+}
+
+/* This mixin sets the initial values of the CSS variables prefixed as `padding-` */
+@mixin padding($properties...) {
+    @include set-vars($properties, padding);
+}
+
+/* This mixin sets the initial values of the CSS variables prefixed as `margin-` */
+@mixin margin($properties...) {
+    @include set-vars($properties, margin);
+}
+
+/* This mixin sets the initial values of the CSS variables prefixed as `flex-` */
+@mixin flex($properties...) {
+    @include set-vars($properties, flex);
+}
+
+/* This mixin sets the initial values of the CSS variables prefixed as `align-` */
+@mixin align($properties...) {
+    @include set-vars($properties, align);
+}
+
+/* This mixin sets the initial values of the CSS variables prefixed as `justify-` */
+@mixin justify($properties...) {
+    @include set-vars($properties, justify);
+}
+
+/* This mixin sets the initial values of the CSS variables prefixed as `grid-` */
+@mixin grid($properties...) {
+    @include set-vars($properties, grid);
+}
+
+/*
+ * This mixin sets the initial values of any CSS variables related to single styles with no prefix
+ * example: width, height, color, opacity, gap, display, ...etc
+ */
+@mixin style($properties...) {
+    @include set-vars($properties);
+}
+
+/* This mixin sets the initial values of the CSS variables prefixed as `header-` */
+@mixin header($properties...) {
+    @include set-vars($properties, header);
+}
+
+/* This mixin sets the initial values of the CSS variables prefixed as `content-` */
+@mixin content($properties...) {
+    @include set-vars($properties, content);
+}
+
+/* This mixin sets the initial values of the CSS variables prefixed as `footer-` */
+@mixin footer($properties...) {
+    @include set-vars($properties, footer);
+}
+
+/* This mixin sets the initial values of the CSS variables prefixed as `hover-` */
+@mixin hover($properties...) {
+    @include set-state-vars($properties, hover);
+}
+
+/* This mixin sets the initial values of the CSS variables prefixed as `active-` */
+@mixin active($properties...) {
+    @include set-state-vars($properties, active);
+}
+
+/* This mixin sets the initial values of the CSS variables prefixed as `disabled-` */
+@mixin disabled($properties...) {
+    @include set-state-vars($properties, disabled, false);
+}
+
+/* This mixin sets the initial values of the CSS variables prefixed as `focus-` */
+@mixin focus($properties...) {
+    @include set-state-vars($properties, focus, false);
+}
+
+/* This mixin sets the initial values of the CSS variables prefixed as `error-` */
+@mixin error($properties...) {
+    @include set-state-vars($properties, error, false);
+}
+
+/*
+ * This mixin sets the initial values of any CSS variables that are not supported by the other mixins
+ * example: icon-size, spinner-color, ...etc
+ */
+@mixin custom($properties...) {
+    @include set-vars($properties);
+}
+
+@mixin alias($properties...) {
+    @each $property, $default, $important in $properties {
+        --#{$property}: #{if($default, $default, initial)};
+        --_#{$property}: #{generate-var($property, null, $important)};
+    }
+}
+

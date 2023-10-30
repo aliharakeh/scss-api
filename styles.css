@@ -1,0 +1,155 @@
+/*
+    This mixin takes a set of css properties and then sets their value or use `initial` if no value was provided
+    It can also take a !important modifier.
+    example:
+        - set-style-vars([color, width 1px, radius 4px !important], border);
+        + {
+        +   --border-color: initial;            // no value
+        +   --border-width: 1px;                // default only
+        +   --border-radius: 4px !important;    // default + important
+        + }
+*/
+/*
+    This mixin takes a set of css properties and then sets their state equivalent css variables
+    It can also take a !important modifier.
+    example:
+        - set-state-vars([color, _color, background-color red, border-color red !important], hover);
+        + {
+        +   --hover-color: var(--color);                                    // no value
+        +   --hover-color: var(--_color);                                   // alias
+        +   --hover-background-color: var(--background-color, red);         // default only
+        +   --hover-border-color: var(--border-color, red) !important;      // default + important
+        + }
+*/
+/*
+    This mixin takes a set of css properties and then connects them to their respective css variable name.
+    It can take a default value and a !important modifier.
+    example:
+    --------
+        - generate-style-css(border, [color, width 1px, radius 4px !important, style !important])
+        + {
+        +   border-color: var(--border-color);                      // no value
+        +   border-width: var(--border-width, 1px);                 // default only
+        +   border-style: var(--border-style) !important;           // important only
+        +   border-radius: var(--border-radius, 4px) !important;    // default + important
+        + }
+
+        STATE
+        -----
+        - generate-style-css(hover, [color, border-width 1px, border-radius 4px !important, border-style !important])
+        + {
+        +   color: var(--hover-color);                                    // no value
+        +   border-width: var(--hover-border-width, 1px);                 // default only
+        +   border-style: var(--hover-border-style) !important;           // important only
+        +   border-radius: var(--hover-border-radius, 4px) !important;    // default + important
+        + }
+*/
+/* This mixin sets the initial values of the CSS variables prefixed as `background-` */
+/* This mixin sets the initial values of the CSS variables prefixed as `font-` */
+/* This mixin sets the initial values of the CSS variables prefixed as `text-` */
+/* This mixin sets the initial values of the CSS variables prefixed as `border-` */
+/* This mixin sets the initial values of the CSS variables prefixed as `padding-` */
+/* This mixin sets the initial values of the CSS variables prefixed as `margin-` */
+/* This mixin sets the initial values of the CSS variables prefixed as `flex-` */
+/* This mixin sets the initial values of the CSS variables prefixed as `align-` */
+/* This mixin sets the initial values of the CSS variables prefixed as `justify-` */
+/* This mixin sets the initial values of the CSS variables prefixed as `grid-` */
+/*
+ * This mixin sets the initial values of any CSS variables related to single styles with no prefix
+ * example: width, height, color, opacity, gap, display, ...etc
+ */
+/* This mixin sets the initial values of the CSS variables prefixed as `header-` */
+/* This mixin sets the initial values of the CSS variables prefixed as `content-` */
+/* This mixin sets the initial values of the CSS variables prefixed as `footer-` */
+/* This mixin sets the initial values of the CSS variables prefixed as `hover-` */
+/* This mixin sets the initial values of the CSS variables prefixed as `active-` */
+/* This mixin sets the initial values of the CSS variables prefixed as `disabled-` */
+/* This mixin sets the initial values of the CSS variables prefixed as `focus-` */
+/* This mixin sets the initial values of the CSS variables prefixed as `error-` */
+/*
+ * This mixin sets the initial values of any CSS variables that are not supported by the other mixins
+ * example: icon-size, spinner-color, ...etc
+ */
+/* This mixin connects the component style to the CSS variables prefixed as `flex-` */
+/* This mixin connects the component style to the CSS variables prefixed as `align-` */
+/* This mixin connects the component style to the CSS variables prefixed as `justify-` */
+/* This mixin connects the component style to the CSS variables prefixed as `grid-` */
+/* This mixin connects the component style to the CSS variables prefixed as `font-` */
+/* This mixin connects the component style to the CSS variables prefixed as `text-` */
+/* This mixin connects the component style to the CSS variables prefixed as `background-` */
+/* This mixin connects the component style to the CSS variables prefixed as `border-` */
+/* This mixin connects the component style to the CSS variables prefixed as `box-` */
+/* This mixin connects the component style to the CSS variables related to padding */
+/* This mixin connects the component style to the CSS variables related to margin */
+/* This mixin connects the component style to the CSS variables that are not supported by the other mixins */
+/* This mixin connects the component style to the CSS variables related to the `header-` */
+/* This mixin connects the component style to the CSS variables related to the `content-` */
+/* This mixin connects the component style to the CSS variables related to the `footer-` */
+/* This mixin connects the component style to the CSS variables related to the hover state */
+/* This mixin connects the component style to the CSS variables related to the active state */
+/* This mixin connects the component style to the CSS variables related to the disabled state */
+/* This mixin connects the component style to the CSS variables related to the focus state */
+/* This mixin connects the component style to the CSS variables related to the error state */
+/* This mixin sets the values of the CSS variables prefixed as `background-` */
+/* This mixin sets the values of the CSS variables prefixed as `font-` */
+/* This mixin sets the values of the CSS variables prefixed as `text-` */
+/* This mixin sets the values of the CSS variables prefixed as `border-` */
+/* This mixin sets the values of the CSS variables prefixed as `box-` */
+/* This mixin sets the values of the CSS variables prefixed as `padding-` */
+/* This mixin sets the values of the CSS variables prefixed as `margin-` */
+/* This mixin sets the values of the CSS variables prefixed as `flex-` */
+/* This mixin sets the values of the CSS variables prefixed as `align-` */
+/* This mixin sets the values of the CSS variables prefixed as `justify-` */
+/*
+ * This mixin sets the values of any CSS variables related to single styles with no prefix
+ * example: width, height, color, opacity, gap, display, ...etc
+ */
+/* This mixin sets the values of the CSS variables prefixed as `header-` */
+/* This mixin sets the values of the CSS variables prefixed as `content-` */
+/* This mixin sets the values of the CSS variables prefixed as `footer-` */
+/* This mixin sets the values of the CSS variables prefixed as `hover-` */
+/* This mixin sets the values of the CSS variables prefixed as `active-` */
+/* This mixin sets the values of the CSS variables prefixed as `disabled-` */
+/* This mixin sets the values of the CSS variables prefixed as `focus-` */
+/* This mixin sets the values of the CSS variables prefixed as `error-` */
+/*
+ * This mixin sets the values of any CSS variables that are not supported by the other mixins
+ * example: icon-size, spinner-color, ...etc
+ */
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.card {
+  --color: black;
+  --background-color: lightgray;
+  --border-color: brown;
+  --padding-block: 8px;
+  --padding-inline: 1rem;
+  overflow: hidden;
+  border-style: solid;
+  flex-grow: 1;
+  border-width: 1px;
+  border-radius: 8px;
+  background-color: var(--background-color);
+  border-color: var(--border-color);
+}
+
+.card-image {
+  width: 100%;
+}
+
+.card-content {
+  color: var(--color);
+  padding-block: var(--padding-block);
+  padding-inline: var(--padding-inline);
+}
+
+.card.dark {
+  --color: white;
+  --border-color: white;
+  --background-color: #333232;
+}

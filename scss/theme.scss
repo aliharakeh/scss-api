@@ -1,0 +1,119 @@
+@use 'utils' as *;
+
+/* This mixin sets the values of the CSS variables prefixed as `background-` */
+@mixin background($vars...) {
+    @include set-vars($vars, background);
+}
+
+/* This mixin sets the values of the CSS variables prefixed as `font-` */
+@mixin font($vars...) {
+    @include set-vars($vars, font);
+}
+
+/* This mixin sets the values of the CSS variables prefixed as `text-` */
+@mixin text($vars...) {
+    @include set-vars($vars, text);
+}
+
+/* This mixin sets the values of the CSS variables prefixed as `border-` */
+@mixin border($vars...) {
+    @include set-vars($vars, border);
+}
+
+/* This mixin sets the values of the CSS variables prefixed as `box-` */
+@mixin box($vars...) {
+    @include set-vars($vars, box);
+}
+
+/* This mixin sets the values of the CSS variables prefixed as `padding-` */
+@mixin padding($vars...) {
+    @include set-vars($vars, padding);
+}
+
+/* This mixin sets the values of the CSS variables prefixed as `margin-` */
+@mixin margin($vars...) {
+    @include set-vars($vars, margin);
+}
+
+/* This mixin sets the values of the CSS variables prefixed as `flex-` */
+@mixin flex($vars...) {
+    @include set-vars($vars, flex);
+}
+
+/* This mixin sets the values of the CSS variables prefixed as `align-` */
+@mixin align($vars...) {
+    @include set-vars($vars, align);
+}
+
+/* This mixin sets the values of the CSS variables prefixed as `justify-` */
+@mixin justify($vars...) {
+    @include set-vars($vars, justify);
+}
+
+/*
+ * This mixin sets the values of any CSS variables related to single styles with no prefix
+ * example: width, height, color, opacity, gap, display, ...etc
+ */
+@mixin style($vars...) {
+    @include set-vars($vars);
+}
+
+/* This mixin sets the values of the CSS variables prefixed as `header-` */
+@mixin header($vars...) {
+    @include set-vars($vars, header);
+}
+
+/* This mixin sets the values of the CSS variables prefixed as `content-` */
+@mixin content($vars...) {
+    @include set-vars($vars, content);
+}
+
+/* This mixin sets the values of the CSS variables prefixed as `footer-` */
+@mixin footer($vars...) {
+    @include set-vars($vars, footer);
+}
+
+/* This mixin sets the values of the CSS variables prefixed as `hover-` */
+@mixin hover($vars...) {
+    @include set-vars($vars, hover);
+}
+
+/* This mixin sets the values of the CSS variables prefixed as `active-` */
+@mixin active($vars...) {
+    @include set-vars($vars, active);
+}
+
+/* This mixin sets the values of the CSS variables prefixed as `disabled-` */
+@mixin disabled($vars...) {
+    @include set-vars($vars, disabled);
+}
+
+/* This mixin sets the values of the CSS variables prefixed as `focus-` */
+@mixin focus($vars...) {
+    @include set-vars($vars, focus);
+}
+
+/* This mixin sets the values of the CSS variables prefixed as `error-` */
+@mixin error($vars...) {
+    @include set-vars($vars, error);
+}
+
+/*
+ * This mixin sets the values of any CSS variables that are not supported by the other mixins
+ * example: icon-size, spinner-color, ...etc
+ */
+@mixin custom($vars...) {
+    @include set-vars($vars);
+}
+
+@mixin alias($vars...) {
+    @each $var, $default, $important in $vars {
+        --#{$var}: #{generate-var(_#{$var}, $default, $important)};
+    }
+}
+
+@mixin connect-vars($vars...) {
+    @each $varA, $varB, $default, $important in $vars {
+        --#{$varA}: #{generate-var($varB, $default, $important)};
+    }
+}

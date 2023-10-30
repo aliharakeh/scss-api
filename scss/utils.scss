@@ -1,0 +1,146 @@
+// ------------------------------------------------------
+// Util mixins & functions to make things more readable
+// ------------------------------------------------------
+$prefix: ds;
+
+// defines a css custom property (css variable)
+@mixin create-css-var($property, $name, $value) {
+    --#{$prefix}-#{$property}-#{$name}: #{$value};
+}
+
+// defines a css custom class
+@mixin create-css-class($property, $name, $value, $important) {
+    $value: if($important, $value !important, $value);
+    .#{$prefix}-#{$name} {
+        #{$property}: #{$value};
+    };
+}
+
+/*
+    This mixin takes a set of css properties and then sets their value or use `initial` if no value was provided
+    It can also take a !important modifier.
+    example:
+        - set-style-vars([color, width 1px, radius 4px !important], border);
+        + {
+        +   --border-color: initial;            // no value
+        +   --border-width: 1px;                // default only
+        +   --border-radius: 4px !important;    // default + important
+        + }
+*/
+@mixin set-vars($properties, $prefix: null) {
+    @each $property, $value, $important in $properties {
+        // check if var is the global property name like padding, background, border, ...
+        $name: if($prefix and $property != $prefix, prefix($property, $prefix), $property);
+        $value: if($value, $value, initial);
+        $value: if($important, $value !important, $value);
+        --#{$name}: #{$value};
+    }
+}
+
+/*
+    This mixin takes a set of css properties and then sets their state equivalent css variables
+    It can also take a !important modifier.
+    example:
+        - set-state-vars([color, _color, background-color red, border-color red !important], hover);
+        + {
+        +   --hover-color: var(--color);                                    // no value
+        +   --hover-color: var(--_color);                                   // alias
+        +   --hover-background-color: var(--background-color, red);         // default only
+        +   --hover-border-color: var(--border-color, red) !important;      // default + important
+        + }
+*/
+@mixin set-state-vars($properties, $prefix, $withProperty: true) {
+    @each $property, $value, $important in $properties {
+        $value: if($withProperty, get-var($property, $value), $value);
+        $value: if($important, $value !important, $value);
+        --#{prefix(name($property), $prefix)}: #{$value};
+    }
+}
+
+/*
+    This mixin takes a set of css properties and then connects them to their respective css variable name.
+    It can take a default value and a !important modifier.
+    example:
+    --------
+        - generate-style-css(border, [color, width 1px, radius 4px !important, style !important])
+        + {
+        +   border-color: var(--border-color);                      // no value
+        +   border-width: var(--border-width, 1px);                 // default only
+        +   border-style: var(--border-style) !important;           // important only
+        +   border-radius: var(--border-radius, 4px) !important;    // default + important
+        + }
+
+        STATE
+        -----
+        - generate-style-css(hover, [color, border-width 1px, border-radius 4px !important, border-style !important])
+        + {
+        +   color: var(--hover-color);                                    // no value
+        +   border-width: var(--hover-border-width, 1px);                 // default only
+        +   border-style: var(--hover-border-style) !important;           // important only
+        +   border-radius: var(--hover-border-radius, 4px) !important;    // default + important
+        + }
+*/
+@mixin generate-style-css($prefix, $properties, $isCustom: null) {
+    @each $property, $default, $important in $properties {
+        // check if property is the global property name like padding, background, border, ...
+        $var: if($prefix and $property != $prefix, prefix($property, $prefix), $property);
+        $name: if($isCustom, $property, $var);
+        $isImportant: is-important($default, $important);
+        $defaultValue: default-value($default);
+        #{$name}: #{generate-var($var, $defaultValue, $isImportant)};
+    }
+}
+
+// gets a value from a nested map
+@function nestedMap($root, $keys...) {
+    $value: $root;
+    @each $key in $keys {
+        $value: map-get($value, $key);
+    }
+    @return $value;
+}
+
+// checks if there is a `!important` modifier
+@function is-important($default, $important) {
+    @return ($default and $default == !important) or $important;
+}
+
+// checks & return a default value
+@function default-value($default, $fallback: null) {
+    @return if($default and $default != !important, $default, $fallback);
+}
+
+// checks & adds a prefix
+@function prefix($name, $prefix) {
+    @return if($prefix, #{$prefix}-#{$name}, $name);
+}
+
+// checks & generate a css var
+@function get-var($name, $fallback: null) {
+    @return if($fallback, var(--#{$name}, #{$fallback}), var(--#{$name}));
+}
+
+// get the correct property name from an alias
+@function name($var) {
+    @if str-index($var, '_') == 1 {
+        @return str-slice($var, 2);
+    }
+    @return $var;
+}
+
+// generates a more complete css var
+@function generate-var($property, $default: null, $important: null) {
+    $value: get-var($property, $default);
+    $value: if($important, $value !important, $value);
+    @return $value;
+}
+
+// returns the variable of the specified color variation
+@function theme-color($variation, $default: null) {
+    @return get-var(color-#{$variation}, $default);
+}
+
+// returns the variable of the specified typography variation
+@function typography($variation, $default: null) {
+    @return get-var(typography-#{$variation}, $default);
+}
