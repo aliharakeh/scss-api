@@ -273,13 +273,17 @@ Don't use theme state APIs for inner components when creating a complex/wrapper 
 
 
 ## Api args
-Each function value should be a single term:
-- **String**: `color`, `background-color`, .....
-- **SCSS Variable**: `global.$ds-color`, `$some-value`, `button.$padding`, ....
-- **Direct Value**: `0px`, `100%`
-- **Multiple Direct Values**:
-    - Use (...) to set the value as a single term
-    - Ex: `(8px 16px)`, `(0px 0px 0px 1px)`, ...
+Each API function takes from 1 to 3 arguments:
+- **CSS Property Name**: `color`, `width`, ...
+- **Default Value**
+    - CSS Value: `red`, `blue`, .....
+    - SCSS Variable: `global.$ds-color`, `$some-value`, `button.$padding`, ....
+    - Direct Value: `0px`, `100%`
+    - Complex Direct Value:
+        - Use (...) to set the value as a single term
+        - Ex: `(8px 16px)`, `(0px 0px 0px 1px)`, ...
+- **Modifier**: `!important`
+
 
 ## What is the difference between adding a default value in `vars` API & `styles` API
 
