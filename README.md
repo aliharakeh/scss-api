@@ -16,24 +16,22 @@ The Styling-API system provides a consistent way to manage styling, so you don't
 internally. You can simply use normal CSS property names to generate the related variables that are needed inside the
 component or the theme.
 
-# FAQ
-
-## Why are these APIs useful?
+# Why are these APIs useful?
 
 These APIs make it easier to manage CSS variables without having to remember them and provide code hints and help when
 needed.
 
-## Vars API
+# Vars API
 
-### When to use?
+## When to use?
 
 When you need to use a CSS variable to configure your component theme.
 
-### Where to use it?
+## Where to use it?
 
 Inside your component's top most container block. ex: `:host{ ... }`
 
-### How to use it?
+## How to use it?
 
 1. Decide on the CSS property you want to update through a variable.
 2. Use the related `vars.<style-api>(...)` function to define your variable, if it is not cascaded. Otherwise, do not
@@ -43,7 +41,7 @@ Inside your component's top most container block. ex: `:host{ ... }`
     - css properties should not take a value if they are needed to be changed later. (ex: like border-color that needs
       to be changed later on hover state)
 
-#### CSS variable naming:
+### CSS variable naming:
 
 Each Vars API function provides a property prefix for related CSS properties. Your CSS variable will be named as your
 CSS property, with the property prefix prepended.
@@ -69,7 +67,7 @@ CSS property, with the property prefix prepended.
 }
 ```
 
-#### Single CSS property function
+### Single CSS property function
 
 The `vars.styles(...)` function is used for any single CSS property.
 
@@ -90,7 +88,7 @@ The `vars.styles(...)` function is used for any single CSS property.
 }
 ```
 
-#### Custom variable function
+### Custom variable function
 
 The `vars.custom(...)` API function is used for custom variables.
 
@@ -110,24 +108,24 @@ The `vars.custom(...)` API function is used for custom variables.
 }
 ```
 
-## Styles API
+# Styles API
 
-### When to use?
+## When to use?
 
 when you need to connect a css style to your defined css variables.
 
-### Where to use it?
+## Where to use it?
 
 inside you component classes.
 
-### How to use it?
+## How to use it?
 
 1. Choose the CSS style you want to update with a variable.
 2. Use the related `styles.<func>(...)` function to define your style. The API will match the style with the variable
    created through the `vars.<func>(...)` function.
 3. Add a default value to your style if you did not specify one in the Vars definition.
 
-#### Default usage
+### Default usage
 
 ```scss
 @use 'scss/vars';
@@ -157,7 +155,7 @@ inside you component classes.
 }
 ```
 
-#### Connecting a style to a custom variable
+### Connecting a style to a custom variable
 
 ```scss
 @use 'scss/vars';
@@ -185,18 +183,18 @@ inside you component classes.
 }
 ```
 
-## Theme API
+# Theme API
 
-### When to use?
+## When to use?
 
 When you need to modify the styles or theme of your component.
 
-### Where to use it?
+## Where to use it?
 
 - External CSS to modify the component styles.
 - When you want to reuse a component in another, and you need to modify the styles a bit.
 
-### How to use it?
+## How to use it?
 
 1. Choose the CSS style you want to update.
 2. Use the related `theme.<func>(...)` to modify your styles.
@@ -228,7 +226,7 @@ When you need to modify the styles or theme of your component.
 .container {
   --color: white;
   --background-color: black;
-  
+
   color: var(--color);
   background-color: var(--background-color);
 }
@@ -239,8 +237,11 @@ When you need to modify the styles or theme of your component.
 }
 ```
 
-### Note
-Don't use theme state APIs for inner components when creating a complex/wrapper component. Instead, use the related property API, as you are not changing the component state, but just updating it according to the parent state.
+## Note
+
+Don't use theme state APIs for inner components when creating a complex/wrapper component. Instead, use the related
+property API, as you are not changing the component state, but just updating it according to the parent state.
+
 ```scss
 @use 'scss/theme';
 
@@ -271,9 +272,10 @@ Don't use theme state APIs for inner components when creating a complex/wrapper 
 }
 ```
 
+# Api args
 
-## Api args
 Each API function takes from 1 to 3 arguments:
+
 - **CSS Property Name**: `color`, `width`, ...
 - **Default Value**
     - CSS Value: `red`, `blue`, .....
@@ -284,82 +286,74 @@ Each API function takes from 1 to 3 arguments:
         - Ex: `(8px 16px)`, `(0px 0px 0px 1px)`, ...
 - **Modifier**: `!important`
 
+# What is the difference between adding a default value in `vars` API & `styles` API
 
-## What is the difference between adding a default value in `vars` API & `styles` API
+You can add a default value to both the `vars` and `styles` APIs. Usually, you should use a `vars` API default value.
+A `styles` API default value is good to use when you have a cascaded variable from a parent element, as in that case you
+will not have any variable defined (as it will override the parent variable).
 
-You can add a default value to both the `vars` and `styles` APIs. Usually, you should use a `vars` API default value. A `styles` API default value is good to use when you have a cascaded variable from a parent element, as in that case you will not have any variable defined (as it will override the parent variable).
+# Tutorial 1 - `vars` & `styles` APIs
 
-# Tutorial 1 - CSS `vars` & `styles` APIs
+In this tutorial, I'll explain how to these APIs to create a custom label component theme and how to modify it.
 
-In this tutorial, I'll explain how we used these APIs to create the `ds-label` component theme and how to update it.
+## 1) Deciding which CSS styles to create CSS variables for
 
-## Step 1 - Decide on what css styles will you want to create css variables for
+The label component has the following design criteria:
 
-In the label component, we have the following design criteria:
+- Change the text color.
+- Change the font size, weight, line-height, and family.
+- Add a min-width to truncate any overflowing text.
 
-- we must be able to change the text color.
-- we must be able to change the font size, weight, line-height, & family
-- we must be able to change the alignment of the text.
-- we must be able to add a min-width to truncate any overflowing text.
+## 2) Creating the variables
 
-## Step 2 - Create the variables
+- Use the `vars` API to create the variables.
+- You can define CSS variables in the same way you define any other JavaScript or TypeScript variables in your
+  component. You define them so you can use them later.
 
-we use the `vars` API to create the variables.
+**Note 1**: We don't define a **color** variable, because if we do, the vars API will overwrite any **cascaded parent
+variable** value.
 
-You can see these variables in the same way you see any other JS/TS variables you might have in your component. You
-define them in order to use them later.
-
-**Note 1:** we don't define any `color` variable, since if we define it, the `vars` API will overwrite any cascaded
-value from a parent element.
-
-**Note 2:** always define your variables inside `:host {...}` for them to be available anywhere in the component.
+**Note 2**: Always define your variables inside `:host {...}` so they are available anywhere in the component tree.
 
 ```scss
-@use 'vars';
+@use 'scss/vars';
 
 :host {
   @include vars.style(line-height, min-width);
   @include vars.font(family, size, weight);
-  @include vars.text(align);
 }
-```
 
-The result will be something like this
-
-```scss
+/*
+  Output
+*/
 :host {
   --line-height: initial;
   --min-width: initial;
   --font-family: initial;
   --font-size: initial;
   --font-weight: initial;
-  --text-align: initial;
 }
 ```
 
-## Step 3 - Connect the variables you created to the component styles
+## 3) Connecting the created variables to the component styles
 
-we use the `styles` API to connect the variables to the component styles.
+- We use the `styles` API to connect the CSS variables to the component styles. You can think of it like using your
+  JavaScript or TypeScript variables to connect your HTML template to your data. In this case, we are just connecting
+  the CSS instead.
+- In the label component case, we need to apply the styles to the inner `span` and the `truncate` class. Connecting
+  these variables is as easy as copying the variable definition and replacing the vars keyword with the styles keyword.
 
-You can consider it like when you use your JS/TS variables to connect your html template with your data. Here, we are
-just connecting the CSS instead.
-
-In the label component case, we need to apply the styles on the inner span & the truncate class.
-
-Connecting these variables is as easy as copying the above variable definition and just replacing the `vars` keyword
-with the `styles` keyword.
-
-**Note :** we also include the `color` in out styles even it doesn't have any variable defined.
+**Note**: We also include the `color` property in our styles, even though it doesn't have any variable defined. We do
+this because we want to be able to override the cascaded value from any parent element.
 
 ```scss
-@use 'vars';
-@use 'styles';
+@use 'scss/vars';
+@use 'scss/styles';
 
 :host {
   /* variables */
   @include vars.style(line-height, min-width);
   @include vars.font(family, size, weight);
-  @include vars.text(align);
 
   /* styles */
   &.truncate-enabled {
@@ -370,24 +364,18 @@ with the `styles` keyword.
     @include styles.style(color, line-height);
     @include styles.font(family, size, weight);
     @include styles.text(align);
-
-    // other styles ...
   }
-
-  // other styles ...
 }
-```
 
-The result will be something like this
-
-```scss
+/*
+Output
+*/
 :host {
   --line-height: initial;
   --min-width: initial;
   --font-family: initial;
   --font-size: initial;
   --font-weight: initial;
-  --text-align: initial;
 
   &.truncate-enabled {
     min-width: var(--min-width);
@@ -399,85 +387,107 @@ The result will be something like this
     font-family: var(--font-family);
     font-size: var(--font-size);
     font-weight: var(--font-weight);
-    text-align: var(--text-align);
-
-    // other styles ...
   }
-
-  // other styles ...
 }
 ```
 
-## Step 4 - Add your default values
+## 4) Adding default values
 
-To finish theming our component, we need to add some default style values that will be applied by default.
+To finish theming our component, we need to add some default style values that will be applied by default. We have two
+options for adding a default value:
 
-Here, we have 2 options for adding a default value:
+- `vars` API
+- `styles` API
 
-- with `vars` API
-- with `styles` API
+The API you choose depends on your needs.
 
-As mentioned above about the difference between the default value in these 2 APIs, what you choose in the end will
-depend on your need.
+### Cases:
 
-We have around 3 cases:
-
-- We have a variable defined & it can't be undefined (undefined = initial css value)
-    - In this case, we can add a default value directly to the var
-    - example: `@include vars.style(color red);`
-- We have Cascaded vars
-
-    - In this case, we don't have any variable defined (as it will overwrite the parent value) so we use the `styles`
-      API default value
-    - example: `@include styles.style(color red);`
-
-- We have to update the component style externally (from a parent component for example)
-    - In this case, we use the `styles` API as a way to add new styles from external sources, and we give it a default
-      since we don't have a variable inside the component for this custom added style.
-
-Now, to apply this to our label component:
+a) We have a variable defined, and it **cannot be undefined** (undefined = initial CSS value). In this case, we can add
+a
+default value directly to the variable. For example:
 
 ```scss
-@use 'modules/global';
-@use 'modules/label';
-@use 'vars';
-@use 'styles';
+@use 'scss/vars';
 
 :host {
-  @include vars.style(line-height label.$line-height, min-width label.$min-truncate-width);
-  @include vars.font(
-                  family global.$ds-font-family,
-                  size label.$font-size,
-                  weight label.$font-weight
+  @include vars.style(color red);
+}
+```
+
+b) We have **parent cascaded variables**. In this case, we do not have any variable defined (as it will overwrite the
+parent
+value), so we use the styles API default value. For example:
+
+```scss
+@use 'scss/styles';
+
+:host {
+  @include styles.style(color red);
+}
+```
+
+c) We need to **update the component style externally** (from a parent component for example). In this case, we use the
+styles API to add new styles from external sources. We give it a default value since we do not have a variable inside
+the component for this custom-added style.
+
+## 5) Final Result
+
+```scss
+@use 'scss/vars';
+@use 'scss/styles';
+
+// global
+$g-font-family: var(--g-font-family, inherit);
+$g-text-color: var(--g-text-color, black);
+
+// label specific
+$min-truncate-width: 30ch;
+$font-size: 16px;
+$line-height: 20px;
+$font-weight: 400;
+
+:host {
+  @include vars.style(
+      line-height $line-height,
+      min-width $min-truncate-width
   );
-  @include vars.text(align label.$text-align);
+  @include vars.font(
+      family $g-font-family,
+      size $font-size,
+      weight $font-weight
+  );
 
   // other styles ...
 
   span {
-    @include styles.style(color global.$ds-text-color, line-height);
+    @include styles.style(color $g-text-color, line-height);
+    @include vars.font(family, size, weight);
 
     // other styles ...
   }
+
+  // other styles ...
 }
-```
 
-The result will be something like this
-
-```scss
+/*
+  Output
+*/
 :host {
-  --line-height: 20px;
   --min-width: 30ch;
-  --font-family: var(--ds-font-family, inherit);
+  --font-family: var(--g-font-family, inherit);
   --font-size: 16px;
+  --line-height: 20px;
   --font-weight: 400;
-  --text-align: left;
 
   // other styles ...
 
   span {
     color: var(--color, var(--ds-text-color, black));
     line-height: var(--line-height);
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    font-weight: var(--font-weight);
 
     // other styles ...
   }
