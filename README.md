@@ -1,3 +1,37 @@
+<!-- TOC -->
+* [Intro](#intro)
+* [Why are these APIs useful?](#why-are-these-apis-useful)
+* [Vars API](#vars-api)
+  * [When to use?](#when-to-use)
+  * [Where to use it?](#where-to-use-it)
+  * [How to use it?](#how-to-use-it)
+    * [CSS variable naming](#css-variable-naming)
+    * [Single CSS property function](#single-css-property-function)
+    * [Custom variable function](#custom-variable-function)
+* [Styles API](#styles-api)
+  * [When to use?](#when-to-use-1)
+  * [Where to use it?](#where-to-use-it-1)
+  * [How to use it?](#how-to-use-it-1)
+    * [Usage](#usage)
+    * [Connecting a style to a custom variable](#connecting-a-style-to-a-custom-variable)
+* [Theme API](#theme-api)
+  * [When to use?](#when-to-use-2)
+  * [Where to use it?](#where-to-use-it-2)
+  * [How to use it?](#how-to-use-it-2)
+* [Api args](#api-args)
+* [What is the difference between adding a default value in `vars` API & `styles` API](#what-is-the-difference-between-adding-a-default-value-in-vars-api--styles-api)
+* [Tutorial](#tutorial)
+  * [1) Specifying what we need](#1-specifying-what-we-need)
+  * [2) Adding variables](#2-adding-variables)
+  * [3) Connecting the variables to the component styles](#3-connecting-the-variables-to-the-component-styles)
+  * [4) Adding default values](#4-adding-default-values)
+    * [Cases:](#cases)
+  * [5) Adding Dark theme](#5-adding-dark-theme)
+  * [6) Adding State](#6-adding-state)
+    * [Option 1: Static hover styles - `theme` api.](#option-1-static-hover-styles---theme-api)
+    * [Option 2: Dynamic State Styles - State APIs](#option-2-dynamic-state-styles---state-apis)
+<!-- TOC -->
+
 # Intro
 
 Design libraries typically have a theme system with local variables for styling components and global variables for
@@ -41,7 +75,7 @@ Inside your component's top most container block. ex: `:host{ ... }`
     - css properties should not take a value if they are needed to be changed later. (ex: like border-color that needs
       to be changed later on hover state)
 
-### CSS variable naming:
+### CSS variable naming
 
 Each Vars API function provides a property prefix for related CSS properties. Your CSS variable will be named as your
 CSS property, with the property prefix prepended.
@@ -125,7 +159,7 @@ inside you component classes.
    created through the `vars.<func>(...)` function.
 3. Add a default value to your style if you did not specify one in the Vars definition.
 
-### Default usage
+### Usage
 
 ```scss
 @use 'scss/vars';
@@ -234,41 +268,6 @@ When you need to modify the styles or theme of your component.
 .container.dark {
     --color: black;
     --background-color: white;
-}
-```
-
-## Note
-
-Don't use theme state APIs for inner components when creating a complex/wrapper component. Instead, use the related
-property API, as you are not changing the component state, but just updating it according to the parent state.
-
-```scss
-@use 'scss/theme';
-
-// WRONG [X]
-.container .inner-child {
-    @include theme.hover(color red);
-}
-
-/*
-  Output
-*/
-.container .inner-child {
-    --hover-color: red;
-}
-
-// ------------------------------------------------
-
-// CORRECT [✓]
-.container .inner-child:hover {
-    @include theme.style(color red);
-}
-
-/*
-  Output
-*/
-.container .inner-child:hover {
-    --color: red;
 }
 ```
 
