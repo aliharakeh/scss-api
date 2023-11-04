@@ -3,45 +3,71 @@
 @use 'scss/theme';
 
 .container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
 }
 
 .card {
-  // define your css variables with css property-like names & default values
-  // through the vars api
-  @include vars.style(color black);
-  @include vars.background(color lightgray);
-  @include vars.border(color brown);
-  @include vars.padding(block 8px, inline 1rem);
+    // define your css variables with css property-like names & default values
+    // through the vars api
+    @include vars.style(color black);
+    @include vars.background(color lightgray);
+    @include vars.hover(color, border-color);
 
-  // normal css
-  overflow: hidden;
-  border-style: solid;
-  flex-grow: 1;
-  border-width: 1px;
-  border-radius: 8px;
+    // normal css
+    flex-grow: 1;
+    overflow: hidden;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 8px;
 
-  // connect css to vars through the styles api
-  @include styles.background(color);
-  @include styles.border(color);
-}
+    // connect css to vars through the styles api
+    @include styles.background(color);
 
-.card-image {
-  width: 100%;
-}
+    &-image {
+        width: 100%;
+    }
 
-.card-content {
-  // connect css to vars through the styles api
-  @include styles.style(color);
-  @include styles.padding(block, inline);
-}
+    &-content {
+        padding: 8px 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
 
-.card.dark {
-  // update the css vars though the theme api
-  @include theme.style(color white);
-  @include theme.border(color white);
-  @include theme.background(color #333232);
+        // set the color css property by the color variable
+        @include styles.style(color);
+    }
+
+    &-action {
+        align-self: flex-end;
+        background: transparent;
+        padding: 8px 1rem;
+        cursor: pointer;
+        font-size: 20px;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 10px;
+
+        // connect different css properties to any variable you want
+        @include styles.style(color);
+        @include styles.connect-css-to-var(border-color color);
+
+        &:hover {
+            @include styles.hover(color, border-color);
+        }
+    }
+
+    &.light {
+        // update hover color theme
+        @include theme.hover(color blue, border-color blue);
+    }
+
+    &.dark {
+        // update the css vars though the theme api
+        @include theme.style(color white);
+        @include theme.background(color #333232);
+        @include theme.hover(color yellow, border-color yellow);
+    }
 }

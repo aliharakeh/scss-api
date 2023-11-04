@@ -50,20 +50,20 @@ CSS property, with the property prefix prepended.
 @use 'scss/vars';
 
 .container {
-  // define vars
-  @include vars.border(color, width 1px);
-  @include vars.background(color blue);
-  @include vars.padding(paddin 1rem);
+    // define vars
+    @include vars.border(color, width 1px);
+    @include vars.background(color blue);
+    @include vars.padding(paddin 1rem);
 }
 
 /*
   Output
 */
 .container {
-  --border-color: initial;
-  --border-width: 1px;
-  --background-color: blue;
-  --padding: 1rem;
+    --border-color: initial;
+    --border-width: 1px;
+    --background-color: blue;
+    --padding: 1rem;
 }
 ```
 
@@ -75,16 +75,16 @@ The `vars.styles(...)` function is used for any single CSS property.
 @use 'scss/vars';
 
 .container {
-  // define vars
-  @include vars.style(color red, width 100px);
+    // define vars
+    @include vars.style(color red, width 100px);
 }
 
 /*
   Output
 */
 .container {
-  --color: red;
-  --width: 100px;
+    --color: red;
+    --width: 100px;
 }
 ```
 
@@ -96,15 +96,15 @@ The `vars.custom(...)` API function is used for custom variables.
 @use 'scss/vars';
 
 .container {
-  // define vars
-  @include vars.custom(image-size 50%);
+    // define vars
+    @include vars.custom(image-size 50%);
 }
 
 /*
   Output
 */
 .container {
-  --image-size: 50%;
+    --image-size: 50%;
 }
 ```
 
@@ -132,26 +132,26 @@ inside you component classes.
 @use 'scss/styles';
 
 .container {
-  // define vars
-  @include vars.style(color red, width 100px);
+    // define vars
+    @include vars.style(color red, width 100px);
 }
 
 .container .child {
-  // define styles
-  @include styles.style(color, width);
+    // define styles
+    @include styles.style(color, width);
 }
 
 /*
   Output
 */
 .container {
-  --color: red;
-  --width: 100px;
+    --color: red;
+    --width: 100px;
 }
 
 .container .child {
-  color: var(--color);
-  width: var(--width);
+    color: var(--color);
+    width: var(--width);
 }
 ```
 
@@ -162,24 +162,24 @@ inside you component classes.
 @use 'scss/styles';
 
 .container {
-  // define vars
-  @include vars.custom(child-width 100px);
+    // define vars
+    @include vars.custom(child-width 100px);
 }
 
 .container .child {
-  // define styles
-  @include styles.connect-css-to-var(width child-width);
+    // define styles
+    @include styles.connect-css-to-var(width child-width);
 }
 
 /*
   Output
 */
 .container {
-  --child-width: 100px;
+    --child-width: 100px;
 }
 
 .container .child {
-  width: var(--child-width);
+    width: var(--child-width);
 }
 ```
 
@@ -205,35 +205,35 @@ When you need to modify the styles or theme of your component.
 @use 'scss/theme';
 
 .container {
-  // define vars
-  @include vars.style(color black);
-  @include vars.background(color white);
+    // define vars
+    @include vars.style(color black);
+    @include vars.background(color white);
 
-  // define styles
-  @include styles.style(color black);
-  @include styles.background(color white);
+    // define styles
+    @include styles.style(color black);
+    @include styles.background(color white);
 }
 
 .container.dark {
-  // switch theme
-  @include theme.style(color white);
-  @include theme.background(color black);
+    // switch theme
+    @include theme.style(color white);
+    @include theme.background(color black);
 }
 
 /*
   Output
 */
 .container {
-  --color: white;
-  --background-color: black;
+    --color: white;
+    --background-color: black;
 
-  color: var(--color);
-  background-color: var(--background-color);
+    color: var(--color);
+    background-color: var(--background-color);
 }
 
 .container.dark {
-  --color: black;
-  --background-color: white;
+    --color: black;
+    --background-color: white;
 }
 ```
 
@@ -247,28 +247,28 @@ property API, as you are not changing the component state, but just updating it 
 
 // WRONG [X]
 .container .inner-child {
-  @include theme.hover(color red);
+    @include theme.hover(color red);
 }
 
 /*
   Output
 */
 .container .inner-child {
-  --hover-color: red;
+    --hover-color: red;
 }
 
 // ------------------------------------------------
 
 // CORRECT [✓]
 .container .inner-child:hover {
-  @include theme.style(color red);
+    @include theme.style(color red);
 }
 
 /*
   Output
 */
 .container .inner-child:hover {
-  --color: red;
+    --color: red;
 }
 ```
 
@@ -286,108 +286,153 @@ Each API function takes from 1 to 3 arguments:
         - Ex: `(8px 16px)`, `(0px 0px 0px 1px)`, ...
 - **Modifier**: `!important`
 
+**Note**: Having a `_` before any property name means that we want to use the alias property variable, not the actual
+one, as there might be a name conflict if an inner component requires this variable where it has the same property
+variable name.
+
 # What is the difference between adding a default value in `vars` API & `styles` API
 
 You can add a default value to both the `vars` and `styles` APIs. Usually, you should use a `vars` API default value.
 A `styles` API default value is good to use when you have a cascaded variable from a parent element, as in that case you
 will not have any variable defined (as it will override the parent variable).
 
-# Tutorial 1 - `vars` & `styles` APIs
+# Tutorial
 
-In this tutorial, I'll explain how to these APIs to create a custom label component theme and how to modify it.
+In this tutorial, I'll explain how to these APIs to create a custom card component theme and how to modify its theme.
 
-## 1) Deciding which CSS styles to create CSS variables for
+## 1) Specifying what we need
 
-The label component has the following design criteria:
+The card component consists of 3 sections:
 
-- Change the text color.
-- Change the font size, weight, line-height, and family.
-- Add a min-width to truncate any overflowing text.
+- Image Content
+- Text Content
+- Actions
 
-## 2) Creating the variables
+Both the Content and Action sections will change their styles to match the current theme.
 
-- Use the `vars` API to create the variables.
-- You can define CSS variables in the same way you define any other JavaScript or TypeScript variables in your
-  component. You define them so you can use them later.
+**Here is a basic sample card we will start with:**
 
-**Note 1**: We don't define a **color** variable, because if we do, the vars API will overwrite any **cascaded parent
-variable** value.
+```html
 
-**Note 2**: Always define your variables inside `:host {...}` so they are available anywhere in the component tree.
+<div class="card">
+    <img
+        src="https://www.w3schools.com/howto/img_avatar.png"
+        alt="Avatar"
+        class="card-image"
+    >
+    <div class="card-content">
+        <div>
+            <h3>John Doe</h3>
+            <p>Architect & Engineer</p>
+        </div>
+        <button class="card-action">View More</button>
+    </div>
+</div>
+```
+
+```scss
+.card {
+    overflow: hidden;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 8px;
+
+    &-image {
+        width: 100%;
+    }
+
+    &-content {
+        padding: 8px 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &-action {
+        align-self: flex-end;
+        background: transparent;
+        padding: 8px 1rem;
+        cursor: pointer;
+        font-size: 20px;
+        border-radius: 10px;
+    }
+}
+```
+
+## 2) Adding variables
+
+- Use the `vars` API to add a variable.
+- You define them so that you can use them later.
+- variables name will use the api function name as a prefix and append the property you chose to define the variable for
+  tp it.
+
+```
+<api>.<function>(<property>) = --<funvtion>-<property>
+
+Example:
+-------
+vars.background(color) = --background-color
+```
+
+**Note**: Always define your variables inside your top host element, so they will be available anywhere in the component
+tree.
 
 ```scss
 @use 'scss/vars';
 
-:host {
-  @include vars.style(line-height, min-width);
-  @include vars.font(family, size, weight);
-}
+.card {
+    // define your css variables with css property-like names & default values
+    // through the vars api
+    @include vars.style(color);
+    @include vars.background(color);
 
-/*
-  Output
-*/
-:host {
-  --line-height: initial;
-  --min-width: initial;
-  --font-family: initial;
-  --font-size: initial;
-  --font-weight: initial;
+    // ...
 }
 ```
 
-## 3) Connecting the created variables to the component styles
+## 3) Connecting the variables to the component styles
 
 - We use the `styles` API to connect the CSS variables to the component styles. You can think of it like using your
   JavaScript or TypeScript variables to connect your HTML template to your data. In this case, we are just connecting
   the CSS instead.
-- In the label component case, we need to apply the styles to the inner `span` and the `truncate` class. Connecting
-  these variables is as easy as copying the variable definition and replacing the vars keyword with the styles keyword.
-
-**Note**: We also include the `color` property in our styles, even though it doesn't have any variable defined. We do
-this because we want to be able to override the cascaded value from any parent element.
+- In the card component case, we need to apply the styles to both content & action sections.
+- We have 2 ways to connect these variables to our styles:
+    - connect the style to a variable with the same css property.
+    - connect the style to a custom variable or one related to another property.
 
 ```scss
 @use 'scss/vars';
 @use 'scss/styles';
+@use 'scss/theme';
 
-:host {
-  /* variables */
-  @include vars.style(line-height, min-width);
-  @include vars.font(family, size, weight);
+.card {
+    // ...
 
-  /* styles */
-  &.truncate-enabled {
-    @include styles.style(min-width);
-  }
+    // set the background-color css property by the background-color variable
+    @include styles.background(color);
 
-  span {
-    @include styles.style(color, line-height);
-    @include styles.font(family, size, weight);
-    @include styles.text(align);
-  }
-}
+    &-image {
+        // ...
+    }
 
-/*
-Output
-*/
-:host {
-  --line-height: initial;
-  --min-width: initial;
-  --font-family: initial;
-  --font-size: initial;
-  --font-weight: initial;
+    &-content {
+        // ...
 
-  &.truncate-enabled {
-    min-width: var(--min-width);
-  }
+        // set the color css property by the color variable
+        @include styles.style(color);
+    }
 
-  span {
-    color: var(--color);
-    line-height: var(--line-height);
-    font-family: var(--font-family);
-    font-size: var(--font-size);
-    font-weight: var(--font-weight);
-  }
+    &-action {
+        // ...
+
+        // add css
+        border-width: 1px;
+        border-style: solid;
+
+        // connect different css properties to any variable you want
+        @include styles.style(color);
+        @include styles.connect-css-to-var(border-color color);
+    }
 }
 ```
 
@@ -411,7 +456,7 @@ default value directly to the variable. For example:
 @use 'scss/vars';
 
 :host {
-  @include vars.style(color red);
+    @include vars.style(color red);
 }
 ```
 
@@ -423,7 +468,7 @@ value), so we use the styles API default value. For example:
 @use 'scss/styles';
 
 :host {
-  @include styles.style(color red);
+    @include styles.style(color red);
 }
 ```
 
@@ -431,148 +476,125 @@ c) We need to **update the component style externally** (from a parent component
 styles API to add new styles from external sources. We give it a default value since we do not have a variable inside
 the component for this custom-added style.
 
-## 5) Final Result
+**In out case, we will add them to the `vars` api:**
 
 ```scss
 @use 'scss/vars';
 @use 'scss/styles';
+@use 'scss/theme';
 
-// global
-$g-font-family: var(--g-font-family, inherit);
-$g-text-color: var(--g-text-color, black);
+.card {
+    // define your css variables with css property-like names & default values
+    // through the vars api
+    @include vars.style(color black); // default value
+    @include vars.background(color lightgray); // default value
 
-// label specific
-$min-truncate-width: 30ch;
-$font-size: 16px;
-$line-height: 20px;
-$font-weight: 400;
-
-:host {
-  @include vars.style(
-      line-height $line-height,
-      min-width $min-truncate-width
-  );
-  @include vars.font(
-      family $g-font-family,
-      size $font-size,
-      weight $font-weight
-  );
-
-  // other styles ...
-
-  span {
-    @include styles.style(color $g-text-color, line-height);
-    @include vars.font(family, size, weight);
-
-    // other styles ...
-  }
-
-  // other styles ...
-}
-
-/*
-  Output
-*/
-:host {
-  --min-width: 30ch;
-  --font-family: var(--g-font-family, inherit);
-  --font-size: 16px;
-  --line-height: 20px;
-  --font-weight: 400;
-
-  // other styles ...
-
-  span {
-    color: var(--color, var(--ds-text-color, black));
-    line-height: var(--line-height);
-    font-family: var(--font-family);
-    font-size: var(--font-size);
-    font-weight: var(--font-weight);
-
-    // other styles ...
-  }
-
-  // other styles ...
+    // ...
 }
 ```
 
-# Tutorial 2 - CSS `vars` & `styles` States APIs :
+## 5) Adding Dark theme
 
-State CSS styles differ a bit from what was described above, and I'll use the `ds-button` component to explain them.
-
-## State vars
-
-State vars differ with normal vars in that their they have 1 extra fallback value which is the variable of the affected
-property.
-
-They create a state variable that is automatically connected to the related property variable.
-
-This is necessary to prevent a broken UI in case there was no default value for these state variables.
-
-**Note 1:** having `_` before any property name means that we want to use the alias property variable not the actual one
-as there might be a name conflict if an inner component require this variable, and it has the same property variable
-name. exmaple: button uses a label/icon inside, and both also have a color/font variable with the same name as the
-button ones.
-
-**Note 2:** only hover & active states take a property variable fallback, as the other states are not affected by the
-property variable and will fall back to the direct value provided when defining their vars.
+We use the `themes` api to modify the component theme
 
 ```scss
-@use 'vars';
+@use 'scss/vars';
+@use 'scss/styles';
+@use 'scss/theme';
 
-:host {
-  // vars ...
+.card {
+    // ...
 
-  // state vars
-  @include vars.hover(_color, background-color red, border-color, opacity);
+    // add dark theme
+    &.dark {
+        // update the css vars though the theme api
+        @include theme.style(color white);
+        @include theme.background(color #333232);
+    }
 }
 ```
 
-The result will be something like this
+## 6) Adding State
+
+We have **2 options** to add a state to our action button.
+
+### Option 1: Static hover styles - `theme` api.
 
 ```scss
-:host {
-  // vars ...
+@use 'scss/vars';
+@use 'scss/styles';
+@use 'scss/theme';
 
-  // state vars
-  --hover-color: var(--_color);
-  --hover-background-color: var(--background-color, red);
-  --hover-border-color: var(--border-color);
-  --hover-opacity: var(--opacity);
+.card {
+    // ...
+
+    &-action {
+        // ...
+
+        // update the color variable value on hover to a specific value
+        &:hover {
+            @include theme.style(color blue, border-color blue);
+        }
+    }
+
+    // ...
 }
 ```
 
-## State Styles
+### Option 2: Dynamic State Styles - State APIs
 
-State styles are the same as normal styles, as they just apply the state variables to the related property.
+- `State variables` differ from normal variables in that they have an extra fallback value, which is the variable of the
+  affected property. State variables create a variable that is automatically connected to the related property variable.
+  This is necessary to prevent a broken UI in case there is no default value for these state variables.
+  - Only hover and active states take a property variable fallback, as the other states are not affected by the property
+    variable and will fall back to the direct value provided when defining their variables.
+- `State Styles` are the same as normal style, they will connect the state var to the css property.
+- `State Theme` is also the same as any normal theme api function, it will set the variable's value directly.
 
 ```scss
-@use 'styles';
+@use 'scss/vars';
+@use 'scss/styles';
+@use 'scss/theme';
 
-button {
-  &:hover {
-    @include styles.hover(color, background-color, border-color, opacity);
-  }
+.card {
+    // ...
+    
+    @include vars.hover(
+        color, // --hover-color: var(--color);
+        border-color // --hover-border-color: var(--border-color);
+    );
+
+    // ...
+    
+    &-action {
+        // ...
+
+        // update color style on hover through external theme
+        &:hover {
+            @include styles.hover(
+                color, // color: var(--hover-color);
+                border-color // border-color: var(--border-color);
+            );
+        }
+    }
+
+    // add light theme config
+    &.light {
+        // update hover color theme
+        @include theme.hover(
+            color blue, // --hover-color: blue;
+            border-color blue // --hover-border-color: blue;
+        );
+    }
+
+    &.dark {
+        // ...
+
+        // update hover color theme
+        @include theme.hover(
+            color yellow, // --hover-color: yellow;
+            border-color yellow // --hover-border-color: yellow;
+        );
+    }
 }
 ```
-
-The result will be something like this
-
-```scss
-button {
-  &:hover {
-    color: var(--hover-color);
-    background-color: var(--hover-background-color);
-    border-color: var(--hover-border-color);
-    opacity: var(--hover-opacity);
-  }
-}
-```
-
-## State Default Values
-
-As mentioned above:
-
-- Hover & Active states take a property variable fallback with a default value if that property variable was not
-  defined.
-- Disabled, Focus, & Error states takes a direct value as other normal vars.

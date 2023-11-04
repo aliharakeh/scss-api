@@ -126,30 +126,48 @@
 .card {
   --color: black;
   --background-color: lightgray;
-  --border-color: brown;
-  --padding-block: 8px;
-  --padding-inline: 1rem;
+  --hover-color: var(--color);
+  --hover-border-color: var(--border-color);
+  flex-grow: 1;
   overflow: hidden;
   border-style: solid;
-  flex-grow: 1;
   border-width: 1px;
   border-radius: 8px;
   background-color: var(--background-color);
-  border-color: var(--border-color);
 }
-
 .card-image {
   width: 100%;
 }
-
 .card-content {
+  padding: 8px 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   color: var(--color);
-  padding-block: var(--padding-block);
-  padding-inline: var(--padding-inline);
 }
-
+.card-action {
+  align-self: flex-end;
+  background: transparent;
+  padding: 8px 1rem;
+  cursor: pointer;
+  font-size: 20px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 10px;
+  color: var(--color);
+  border-color: var(--color);
+}
+.card-action:hover {
+  color: var(--hover-color);
+  border-color: var(--hover-border-color);
+}
+.card.light {
+  --hover-color: blue;
+  --hover-border-color: blue;
+}
 .card.dark {
   --color: white;
-  --border-color: white;
   --background-color: #333232;
+  --hover-color: yellow;
+  --hover-border-color: yellow;
 }
