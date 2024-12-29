@@ -87,7 +87,7 @@ CSS property, with the property prefix prepended.
     // define vars
     @include vars.border(color, width 1px);
     @include vars.background(color blue);
-    @include vars.padding(paddin 1rem);
+    @include vars.padding(padding 1rem);
 }
 
 /*
@@ -261,8 +261,8 @@ When you need to modify the styles or theme of your component.
     --color: white;
     --background-color: black;
 
-    color: var(--color);
-    background-color: var(--background-color);
+    color: var(--color, white);
+    background-color: var(--background-color, black);
 }
 
 .container.dark {
